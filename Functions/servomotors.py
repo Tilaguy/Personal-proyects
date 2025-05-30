@@ -37,14 +37,13 @@ class v4_x_series:
       power_input (float): Estimated input power [W].
       efficiency (float): Estimated efficiency [%].
   """
-  def __init__(self, ref: str, servo_name: str = ""):
+  def __init__(self, ref: str):
     """
     Initializes the servomotor model using data from CSV databases and fits
     regression models for all operational variables.
 
     Parameters:
         ref (str): Reference name of the motor model (e.g., "4-p36").
-        servo_name (str): Optional custom name for the motor.
     """
     self.speed = 0
     self.power_output = 0
@@ -55,16 +54,16 @@ class v4_x_series:
     self.efficiency = 0
     self.__ref = ref
     
-    __file_name_dict = {
+    file_name_dict = {
       "4-p36": "Databases/4_p36.csv",
       "2-p28": "Databases/2_p28.csv",
     }
     
-    if ref not in __file_name_dict.keys():
+    if ref not in file_name_dict.keys():
       raise ValueError("Motor reference is not into database")
     
     self.__db = pd.read_csv(
-      filepath_or_buffer=__file_name_dict[ref],
+      filepath_or_buffer=file_name_dict[ref],
       sep=";",
       header=0,
       )
@@ -134,7 +133,7 @@ class v4_x_series:
           - "Voltage [V]"
           - "Current [A]"
           - "Pin [W]"
-          - "Efficiency (%)"
+          - "efficiency (%)"
     """
     model_map  = {
       "Speed [r/min]": self.__speed_func,
@@ -142,7 +141,7 @@ class v4_x_series:
       "Voltage [V]": self.__voltage_func,
       "Current [A]": self.__current_func,
       "Pin [W]": self.__power_input_func,
-      "Efficiency (%)": self.__efficiency_func,
+      "efficiency (%)": self.__efficiency_func,
     }
     variable_map  = {
       "Speed [r/min]":  "N(r/min)",
@@ -150,7 +149,7 @@ class v4_x_series:
       "Voltage [V]": "U(V)",
       "Current [A]": "I(A)",
       "Pin [W]": "Pin(W)",
-      "Efficiency (%)": "Eff(%)",
+      "efficiency (%)": "Eff(%)",
     }
     
     if model_name not in model_map:

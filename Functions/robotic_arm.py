@@ -61,7 +61,7 @@ class robotic_arm:
     for servo_idx in self.arm_structure.index:
         motor_name = f"M{servo_idx+1}"
         servo_data = self.arm_structure.loc[servo_idx]
-        servo = v4_x_series(servo_data["Servomotor reference"], motor_name)
+        servo = v4_x_series(servo_data["Servomotor reference"])
         op_servo = point_getter(servo, servo_data)
 
         if servos_op.empty:
